@@ -1,6 +1,3 @@
-// Import LIBs
-//#include <PID_v1.h>
-
 
 // DEFINIÇÕES DE PINOS
 #define dirFrente 3
@@ -62,6 +59,23 @@ void setup() {
 void loop(void)
 {
     while (Serial.available() < 1) {
+        String espInput = Serial.readString();
+        
+        if (espInput.indexOf("x") != -1){
+          espInput = espInput.substring(espInput.indexOf("=") + 1);
+          int xInput = espInput.toInt();
+          Serial.print("Pos X =");
+          Serial.println(xInput);
+        }
+        else if (espInput.indexOf("y") != -1){
+          espInput = espInput.substring(espInput.indexOf("=") + 1);
+          int yInput = espInput.toInt();
+          Serial.print("Pos Y =");
+          Serial.println(yInput);
+        } 
+
+        
+        
         distanceSensor();
 
         if (state == 1 && millis() - tempoMovendoY >= tempoParaAlcancarY){ // Entra aqui quando alcançar a posição final Y
@@ -120,8 +134,8 @@ void distanceSensor() {
     distancia = pulseIn (echo, HIGH);
     distancia = distancia/58;
 
-    Serial.print ("distancia: ");
-    Serial.println (distancia);
+    //Serial.print ("distancia: ");
+    //Serial.println (distancia);
 }
 
 

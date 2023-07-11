@@ -12,7 +12,6 @@ void blink_led() {
 }
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600); 
 
   pinMode(LED_BUILTIN, OUTPUT);
@@ -28,12 +27,9 @@ void setup() {
 
   server.begin();
 
- // Serial.println("Server started"); 
-  //Serial.println(WiFi.softAPIP());
 }
 
 void loop() {
-  //tcpCleanup();
   WiFiClient client = server.available();
   if (!client) {
     return;
@@ -59,11 +55,33 @@ void loop() {
     client.print("start");
     Serial.print("start");
     blink_led();
+    client.flush();
   }
   else if (req.indexOf("stop") != -1)
   {
     client.print("stop");
     Serial.print("stop");
+    blink_led();
+    client.flush();
+  }  
+  else if (req.indexOf("x") != -1)
+  {
+    client.print(req);
+    Serial.print(req);
+    blink_led();
+    client.flush();
+  }  
+  else if (req.indexOf("y") != -1)
+  {
+    client.print(req);
+    Serial.print(req);
+    blink_led();
+    client.flush();
+  }  
+  else if (req.indexOf("pos") != -1)
+  {
+    client.print(req);
+    Serial.print(req);
     blink_led();
   }  
   else {
