@@ -43,9 +43,7 @@ void loop() {
   }
 
   String req = client.readStringUntil('\r');
-  //Serial.println(req);
   req = req.substring(req.indexOf("/") + 1, req.indexOf("HTTP") - 1);
-  //Serial.println(req);
   client.flush();
 
   // Match the request

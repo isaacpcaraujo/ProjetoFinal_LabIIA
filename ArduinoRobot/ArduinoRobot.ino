@@ -13,8 +13,8 @@ float distancia;
 
 // Speed
 int delayGiro = 600;
-int velocidadeE = 70 * 1.16; 
-int velocidadeD = 70;
+int velocidadeE = 40 * 1.16; 
+int velocidadeD = 40;
 
 // PID
 double Setpoint, Input, Output;
@@ -24,12 +24,13 @@ double Kp=0.003, Ki=0.00001, Kd=0.001;
 // Posiçao
 double xDistancia = 0;
 double yDistancia = 0;
-double tempoParaAlcancarX = 10 *1000;
-double tempoParaAlcancarY = 10 *1000;
+double tempoParaAlcancarX = 0;
+double tempoParaAlcancarY = 0;
 
 double tempoMovendoY = 0;
 double tempoMovendoX = 0;
 double tempoDesvioObstaculo = 0;
+double velocidadeRobo = 0.5;
 
 bool enable;
 int state = 0;
@@ -60,19 +61,31 @@ void loop(void)
 {
     while (Serial.available() < 1) {
         String espInput = Serial.readString();
+        Serial.println(espInput);
         
         if (espInput.indexOf("x") != -1){
           espInput = espInput.substring(espInput.indexOf("=") + 1);
           int xInput = espInput.toInt();
+          tempoParaAlcancarX = xInput * 1000/velocidadeRobo;
           Serial.print("Pos X =");
           Serial.println(xInput);
+          enable = true;
+          state = 1;
+          tempoMovendoY = millis();
+          moveFrente (); 
         }
         else if (espInput.indexOf("y") != -1){
           espInput = espInput.substring(espInput.indexOf("=") + 1);
           int yInput = espInput.toInt();
+          tempoParaAlcancarY = (double)yInput * 1000/velocidadeRobo;
           Serial.print("Pos Y =");
           Serial.println(yInput);
         } 
+
+        if (espInput == "stop"){
+          parar();
+          enable = false; 
+        }
 
         
         
@@ -90,7 +103,7 @@ void loop(void)
             parar();
         }
 
-        if (distancia <= 30 && distancia > 0 && enable && false){
+        if (distancia <= 30 && distancia > 0 && enable){
             tempoDesvioObstaculo = millis();
             parar();
             delay(200);
@@ -122,6 +135,8 @@ void loop(void)
 
     char val = Serial.read();
     direcao(val);
+
+     
 }
 
 void distanceSensor() {
@@ -134,8 +149,8 @@ void distanceSensor() {
     distancia = pulseIn (echo, HIGH);
     distancia = distancia/58;
 
-    //Serial.print ("distancia: ");
-    //Serial.println (distancia);
+    Serial.print ("distancia: ");
+    Serial.println (distancia);
 }
 
 
