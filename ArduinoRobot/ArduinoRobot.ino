@@ -17,8 +17,8 @@ int velocidadeE = 40 * 1.16;
 int velocidadeD = 40;
 
 // PID
-double Setpoint, Input, Output;
-double Kp=0.003, Ki=0.00001, Kd=0.001;
+//double Setpoint, Input, Output;
+//double Kp=0.003, Ki=0.00001, Kd=0.001;
 //PID speedPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // Posiçao
@@ -52,7 +52,7 @@ void setup() {
     distancia = 1000;
     enable = false;
 
-//    speedPID.SetMode(AUTOMATIC);
+//  speedPID.SetMode(AUTOMATIC);
 
     Serial.begin(9600);
 }
@@ -60,6 +60,8 @@ void setup() {
 void loop(void)
 {
     while (Serial.available() < 1) {
+
+        // Tratamento da string recebida pelo ESP8266
         String espInput = Serial.readString();
         Serial.println(espInput);
         
@@ -88,8 +90,8 @@ void loop(void)
         }
 
         
-        
         distanceSensor();
+
 
         if (state == 1 && millis() - tempoMovendoY >= tempoParaAlcancarY){ // Entra aqui quando alcançar a posição final Y
             state = 2;
@@ -133,8 +135,8 @@ void loop(void)
 //    speedPID.Compute();
 //    analogWrite(PIN_OUTPUT, Output);
 
-    char val = Serial.read();
-    direcao(val);
+//    char val = Serial.read();
+//    direcao(val);
 
      
 }
@@ -199,6 +201,7 @@ void subVelocidade(int valor){
   velocidadeD -= valor;
 }
 
+// Função Utilizada para testes iniciais
 void direcao(char val){
     switch(val) 
     {
